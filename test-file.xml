@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+    <item>
+        <array>
+            <item>1</item>
+            <item>2</item>
+            <item>3</item>
+        </array>
+        <bool>true</bool>
+        <float>0.5</float>
+        <int>5</int>
+        <null></null>
+        <object>
+            <k1>v1</k1>
+            <k2>v2</k2>
+            <k3>v3</k3>
+        </object>
+        <string>string_value</string>
+    </item>
+    <item>
+        <amp>&amp;</amp>
+        <crlf>
+</crlf>
+        <eq>=</eq>
+        <gt>&gt;</gt>
+        <lt>&lt;</lt>
+        <quot>"</quot>
+    </item>
+    <item>
+        <array>
+        </array>
+        <bool>false</bool>
+        <float>0</float>
+        <int>0</int>
+        <object>
+        </object>
+        <string></string>
+    </item>
+    <item>
+        <high_neg>-1.234e+20</high_neg>
+        <high_pos>1.234e+20</high_pos>
+        <low_neg>-1.234e-20</low_neg>
+        <low_pos>1.234e-20</low_pos>
+    </item>
+</doc>
