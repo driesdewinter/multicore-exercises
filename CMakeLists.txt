@@ -25,6 +25,8 @@ add_example(acq-rel-example)
 add_example(seq-cst-example)
 add_example(tsfifo)
 add_example(singleton)
+add_example(make-large-file)
+add_example(ordering)
 
 function(add_impl name)
 	add_executable(${name} ${name}.cpp)
@@ -38,17 +40,21 @@ add_impl(impl2-orig)
 add_impl(impl3)
 add_impl(impl3-orig)
 
-function(add_large_file name r)
+function(add_large_file input r output)
 	add_custom_command(
-		OUTPUT ${name} 
-		COMMAND sh -c "${CMAKE_CURRENT_SOURCE_DIR}/make-large-file.sh ${CMAKE_CURRENT_SOURCE_DIR}/large-file.json ${CMAKE_CURRENT_BINARY_DIR}/${name} ${r}"
-		DEPENDS make-large-file.sh large-file.json)
-	add_custom_target(make-${name} ALL DEPENDS ${name})
+		OUTPUT ${output} 
+		COMMAND ${CMAKE_CURRENT_BINARY_DIR}/make-large-file ${r} <${CMAKE_CURRENT_SOURCE_DIR}/${input} >${CMAKE_CURRENT_BINARY_DIR}/${output}
+		DEPENDS make-large-file ${input})
+	add_custom_target(make-${output} ALL DEPENDS ${output})
 endfunction()
 
-add_large_file(large-file.json 1)
-add_large_file(xlarge-file.json 5)
-add_large_file(xxlarge-file.json 25)
+add_large_file(large-file.json  1   large-file.json)
+add_large_file(large-file.json  5  xlarge-file.json)
+add_large_file(large-file.json 25 xxlarge-file.json)
+
+add_large_file(test-file.json      1 test-file.json)
+add_large_file(test-file.json  10000 test-file-xl.json)
+add_large_file(test-file.json 100000 test-file-xxl.json)
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 

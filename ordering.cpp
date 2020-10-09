@@ -229,7 +229,7 @@ struct mp : test
   }
   bool eval() override
   {
-    std::cout << "r1=" << r1 << " r2=" << r2 << "\n";
+    //std::cout << "r1=" << r1 << " r2=" << r2 << "\n";
     return not (r1 == 1 and r2 == 0);
   }
   int X;
@@ -402,39 +402,67 @@ struct contended_atomic : test
 };
 REGISTER_TEST(contended_atomic);
 
-struct uncontended_atomic : test
+struct atomic_fetch_add : test
 {
   void reset() override
   {
     t0 = std::chrono::steady_clock::now();
     X = 0;
-    Y = 0;
   }
   void op1() override
   {
     for (int i = 0; i < 10000000; i++)
     {
-      X.fetch_add(1, std::memory_order_relaxed);
+      X++;
     }
   }
   void op2() override
   {
     for (int i = 0; i < 10000000; i++)
     {
-      Y.fetch_add(1, std::memory_order_relaxed);
+      X++;
     }
   }
   bool eval() override
   {
     auto t1 = std::chrono::steady_clock::now();
     std::cout << "It took " << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count() << " ms.\n";
-    return X.load() == 10000000 and Y.load() == 10000000;
+    return X.load() == 20000000;
   }
   std::chrono::steady_clock::time_point t0;
   std::atomic<int> X;
-  char padding[256];
-  std::atomic<int> Y;
+};
+REGISTER_TEST(atomic_fetch_add);
+
+struct atomic_store : test
+{
+  void reset() override
+  {
+    t0 = std::chrono::steady_clock::now();
+    X = 0;
+  }
+  void op1() override
+  {
+    for (int i = 0; i < 10000000; i++)
+    {
+      X = X + 1;
+    }
+  }
+  void op2() override
+  {
+    for (int i = 0; i < 10000000; i++)
+    {
+      X = X + 1;
+    }
+  }
+  bool eval() override
+  {
+    auto t1 = std::chrono::steady_clock::now();
+    std::cout << "It took " << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count() << " ms.\n";
+    return X.load() >= 10000000;
+  }
+  std::chrono::steady_clock::time_point t0;
+  std::atomic<int> X;
 
 };
-REGISTER_TEST(uncontended_atomic);
-
+REGISTER_TEST(atomic_store);
