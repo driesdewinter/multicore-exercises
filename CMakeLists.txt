@@ -27,6 +27,7 @@ add_example(tsfifo)
 add_example(singleton)
 add_example(make-large-file)
 add_example(ordering)
+add_example(perftest)
 
 function(add_impl name)
 	add_executable(${name} ${name}.cpp)
